@@ -1,0 +1,4 @@
+INDEX VERSION 1.126+/Users/Kaustubh/Monaca/DualCordovaWebviewPlugin/platforms/android/.metadata/.plugins/org.eclipse.jdt.core
+3186017070.index
+2394688631.index
+1614858541.index

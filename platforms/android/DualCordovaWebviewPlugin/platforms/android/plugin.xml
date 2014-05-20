@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"  id="org.apache.cordova.DualwebView"  xmlns:android="http://schemas.android.com/apk/res/android" version="1.0">
+    <name>DualWebviewPlugin</name>
+   
+   
+      <engine name="cordova" version=">=3.0" /><!-- Needs cordova/urlutil -->
+    </engines>
+    
+	<platform name="android">
+		<config-file target="res/xml/config.xml" parent="/*">
+			<feature name="DualWebviewPlugin">
+                <param name="android-package" value="com.cordova.dualwebview.DualWebviewPlugin"/>
+            </feature>
+        </config-file>
+
+		<config-file parent="/manifest/application" target="AndroidManifest.xml" >
+        </config-file>
+
+		<config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.INTERNET" />
+        </config-file>
+
+		<js-module src="www/js/DualwebView.js" name="DualwebView">
+			<clobbers target="window.DualwebView" />
+		</js-module>
+
+        <asset src="www/index.html" target="index.html" />
+		 
+		<source-file src="src/com/cordova/dualwebview/DualWebviewPlugin.java" target-dir="src/com/cordova/dualwebview" />
+        
+		<lib-file src="libs/android-support-v4.jar" />
+
+   </platform>
+   
+</plugin>
