@@ -1,4 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">DualCordovaWebviewPlugin</string>
+    <string name="btn_hide">Hide</string>
+    <string name="btn_show">Show</string>
+    <string name="page_load_msg">Page loaded</string>
+    <string name="page_load_error_msg">Error occured while loading page</string>
+    <string name="top">top</string>
 </resources>
