@@ -10,6 +10,12 @@
 
 @interface DualCordovaWebviewPlugin : CDVPlugin<UIWebViewDelegate>
 
+@property(nonatomic,strong)UIButton *btnHideShowOverlay;
+@property(nonatomic,strong)UIWebView *webview;
+@property(nonatomic)CGFloat webviewHeight;
+@property(nonatomic)NSString *position;
+@property(nonatomic)BOOL hideWebviewFlag;
+
 -(void)addSubview:(CDVInvokedUrlCommand *)command;
 
 -(void)deviceready:(CDVInvokedUrlCommand *)command;
