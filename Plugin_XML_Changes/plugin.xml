@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"  id="com.cordova.dualwebview"  xmlns:android="http://schemas.android.com/apk/res/android" version="1.0">
+    <name>DualWebViewPlugin</name>
+    <description>Dual Webview Plugin</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,Dual Webview</keywords>
+    <repo>https://github.com/monaca/Cordova-3.4-DualWebView-Plugin.git</repo>
+    <author>Monaca</author>
+
+    <engines>
+      <engine name="cordova" version=">=3.0" /><!-- Needs cordova/urlutil -->
+    </engines>
+    
+    <!-- ios -->
+    <platform name="ios">
+        <js-module src="www/DualwebView.js" name="DualwebView">
+            <clobbers target="window.DualwebView" />
+        </js-module>
+        
+       
+        
+        <config-file target="config.xml" parent="/*">
+            <feature name="DualWebViewPlugin">
+                <param name="ios-package" value="DualCordovaWebviewPlugin" />
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/DualCordovaWebviewPlugin.h"/>
+	    <source-file src="src/ios/DualCordovaWebviewPlugin.m"/>
+	    
+    </platform>
+    
+	<platform name="android">
+		
+		<config-file target="res/xml/config.xml" parent="/*">
+			<feature name="DualWebViewPlugin">
+                <param name="android-package" value="com.cordova.dualwebview.DualWebViewPlugin"/>
+            </feature>
+        </config-file>
+		
+		<js-module src="www/DualwebView.js" name="DualwebView">
+			<clobbers target="window.DualwebView" />
+		</js-module>
+		 
+		<source-file src="src/android/DualWebViewPlugin.java" target-dir="src/com/cordova/dualwebview" />
+		 
+		<config-file target="AndroidManifest.xml" parent="/manifest/application">
+			<uses-permission android:name="android.permission.INTERNET" />
+        </config-file>
+        
+   </platform>
+
+</plugin>
