@@ -1,4 +1,4 @@
- //
+//
 //  DualCordovaWebviewPlugin.m
 //  DualCordovaWebviewPlugin
 //
@@ -9,44 +9,31 @@
 #import "DualCordovaWebviewPlugin.h"
 
 @implementation DualCordovaWebviewPlugin
-@synthesize btnHideShowOverlay,webview,webviewHeight,hideWebviewFlag;
+@synthesize webview,webviewHeight;
 
 
 -(void)deviceready:(CDVInvokedUrlCommand*)command
 {
-    self.webView.delegate = self;
-    NSString* url = @"http://www.yahoo.com";
-    NSURL* nsUrl = [NSURL URLWithString:url];
-    NSURLRequest* request = [NSURLRequest requestWithURL:nsUrl cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
-    [self.webView loadRequest:request];
-    
     self.webview = [[UIWebView alloc]init];
     self.webview .delegate = self;
     self.webview.tag = 100;
 }
 
-
+//***** add subview ****//
 -(void)addSubview:(CDVInvokedUrlCommand *)command
 {
     NSMutableDictionary* properties = [command.arguments objectAtIndex:0];
-        self.position = [properties objectForKey:@"position"];
-        BOOL overlay = [[properties objectForKey:@"overlay"] boolValue];
-        NSString *url = [properties objectForKey:@"href"];
-         webviewHeight = [[properties objectForKey:@"height"]floatValue];
+    self.position = [properties objectForKey:@"position"];
+    BOOL overlay = [[properties objectForKey:@"overlay"] boolValue];
+    NSString *url = [properties objectForKey:@"href"];
+    webviewHeight = [[properties objectForKey:@"height"]floatValue];
+    
     if (overlay == true)
     {
-        btnHideShowOverlay = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [btnHideShowOverlay setBackgroundColor:[UIColor grayColor]];
-        [btnHideShowOverlay setFrame:CGRectMake(10, 20, 300, 50)];
-        [btnHideShowOverlay setTitle:@"Hide" forState:UIControlStateNormal];
-        hideWebviewFlag = false;
-        [btnHideShowOverlay setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [btnHideShowOverlay addTarget:self action:@selector(btnHideShowWebviewClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.viewController.view addSubview:btnHideShowOverlay];
         if ([self.position isEqualToString:@"top"])
         {
-            [self.webView setFrame:CGRectMake(0, webviewHeight+80, 320, 548-webviewHeight)];
-            [self.webview setFrame:CGRectMake(0, 80, 320, webviewHeight)];
+            [self.webView setFrame:CGRectMake(0, webviewHeight+20, 320, 548-webviewHeight)];
+            [self.webview setFrame:CGRectMake(0, 20, 320, webviewHeight)];
             [webview setBackgroundColor:[UIColor clearColor]];
             NSURL* nsUrl = [NSURL URLWithString:url];
             NSURLRequest* request = [NSURLRequest requestWithURL:nsUrl cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
@@ -54,7 +41,7 @@
             [self.viewController.view addSubview:self.webview];
         }
         else{
-            [self.webView setFrame:CGRectMake(0, 80, 320, 548 - webviewHeight)];
+            [self.webView setFrame:CGRectMake(0, 20, 320, 548 - webviewHeight)];
             [self.webview setFrame:CGRectMake(0, 548-webviewHeight, 320, webviewHeight)];
             [self.webview  setBackgroundColor:[UIColor clearColor]];
             NSString* url1 = @"http://www.google.com";
@@ -65,57 +52,54 @@
         }
     }
     else{
-         [self.webView setFrame:CGRectMake(0, 20, 320, 548)];
+        [self.webView setFrame:CGRectMake(0, 20, 320, 548)];
+        self.webView.delegate = self;
+        NSString* url = @"http://www.yahoo.com";
+        NSURL* nsUrl = [NSURL URLWithString:url];
+        NSURLRequest* request = [NSURLRequest requestWithURL:nsUrl cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+        [self.webView loadRequest:request];
     }
+    
 }
 
-
--(void)btnHideShowWebviewClicked
-{
-    if ([self.position isEqualToString:@"top"]) {
-        if (hideWebviewFlag == false) {
-            
-            [self.webview  setHidden:YES];
-            [btnHideShowOverlay setTitle:@"Show" forState:UIControlStateNormal];
-            [self.webView setFrame:CGRectMake(0, 80, 320, 548)];
-            [self.viewController.view bringSubviewToFront:self.webView];
-            hideWebviewFlag = true;
-            
-        }
-        else{
-            
-            [btnHideShowOverlay setTitle:@"Hide" forState:UIControlStateNormal];
-            [self.webview  setHidden:NO];
-            [self.webView setFrame:CGRectMake(0, webviewHeight+80, 320, 548-webviewHeight)];
-            self.webview = [[UIWebView alloc] initWithFrame:CGRectMake(0, 80, 320, webviewHeight)];
-            hideWebviewFlag = false;
-            
-        }
+//***** show subview ****//
+-(void)showSubview:(CDVInvokedUrlCommand *)command{
+    
+    if ([self.position isEqualToString:@"top"])
+    {
+        [self.webview  setHidden:NO];
+        [self.webView setFrame:CGRectMake(0, webviewHeight+20, 320, 548-webviewHeight)];
+        self.webview = [[UIWebView alloc] initWithFrame:CGRectMake(0, 20, 320, webviewHeight)];
     }
     else{
-    
-        if (hideWebviewFlag == false) {
-            
-            [self.webview  setHidden:YES];
-            [btnHideShowOverlay setTitle:@"Show" forState:UIControlStateNormal];
-            [self.webView setFrame:CGRectMake(0, 80, 320, 548)];
-            [self.viewController.view bringSubviewToFront:self.webView];
-            hideWebviewFlag = true;
-            
-        }
-        else{
-            
-            [btnHideShowOverlay setTitle:@"Hide" forState:UIControlStateNormal];
-            [self.webview  setHidden:NO];
-            [self.webView setFrame:CGRectMake(0, 80, 320, 488 - webviewHeight)];
-            [self.webview setFrame:CGRectMake(0, 548-webviewHeight, 320, webviewHeight)];
-            hideWebviewFlag = false;
-            
-        }
-    
+        
+        [self.webview  setHidden:NO];
+        [self.webView setFrame:CGRectMake(0, 20, 320, 488 - webviewHeight)];
+        [self.webview setFrame:CGRectMake(0, 548-webviewHeight, 320, webviewHeight)];
+        
     }
-
 }
+
+//***** hide subview ****//
+-(void)hideSubview:(CDVInvokedUrlCommand *)command{
+    
+    if ([self.position isEqualToString:@"top"])
+    {
+        [self.webview  setHidden:YES];
+        [self.webView setFrame:CGRectMake(0, 20, 320, 548)];
+        [self.viewController.view bringSubviewToFront:self.webView];
+        
+    }
+    else{
+        
+        [self.webview  setHidden:YES];
+        [self.webView setFrame:CGRectMake(0, 20, 320, 548)];
+        [self.viewController.view bringSubviewToFront:self.webView];
+        
+    }
+    
+}
+
 
 #pragma mark UIWebview Delegate
 
@@ -132,7 +116,7 @@
 {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[NSString stringWithFormat:@"%@",error.description] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
     [alert show];
-
+    
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
