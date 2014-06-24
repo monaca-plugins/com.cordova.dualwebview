@@ -1,5 +1,5 @@
-cordova.define("org.apache.cordova.DualWebView.DualwebView", function(require, exports, module) {
-               var exec = require("cordova/exec");
+		var exec = require("cordova/exec");
+
                var addDualWebView  = function(){
                };
                
