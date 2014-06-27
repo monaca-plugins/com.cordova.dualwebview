@@ -39,7 +39,13 @@
                 window.DualwebView.deviceready();
                 addSubview();
                 
+                window.DualwebView.onNavigation = function(message) {
+                    
+                    alert("Navigated to " +message);
+                };
+                
             };
+        
         
             function addSubview(){
                 
@@ -47,9 +53,14 @@
             var btn = document.getElementById("overlaybtn");
             if(!flag) btn.style.cssText="display:none;";
             
+            var loadBtn = document.getElementById("loadurlBtn");
+            if(!flag) loadBtn.style.cssText="display:none;";
+
+            
+            var baseUrl = 'http://www.google.com';
             window.DualwebView.addSubview(callback,{
                                           position: 'bottom',  //(or bottom)
-                                          href: 'http://www.google.com',
+                                          href: baseUrl,
                                           height: '200',
                                           overlay: flag,
                                           
@@ -57,7 +68,18 @@
                                           
             };
         
+            function loadUrlInSubview(){
+                
+            var newUrl = 'http://monaca.mobi/en/features'
+            
+                window.DualwebView.loadUrlInSubview(callback,{
+                                                url: newUrl,
+                                                });
+                                                
+            };
+        
             function callback(){
+            
             
             };
         
@@ -80,7 +102,7 @@
             function showSubview(){
         
                 window.DualwebView.showSubview(callback);
-        
+               
             };
         
             function hideSubview(){
@@ -88,8 +110,9 @@
                 window.DualwebView.hideSubview(callback);
             
             };
-
         
+       
+       
         </script>
     </head>
     
@@ -98,9 +121,11 @@
         <script type="text/javascript" src="js/index.js"></script>
         
         <div>
-          
+            <br><br>
             <input name="btn" onclick="changeBtnTitle();" type="button" class="btn" value="Hide" id="overlaybtn">
-                    
+            <br><br>
+            <input name="btn" onclick="loadUrlInSubview();" type="button" class="btn" value="Load Page" id="loadurlBtn">
         </div>
+      
     </body>
 </html>

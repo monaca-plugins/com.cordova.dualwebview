@@ -22,5 +22,6 @@
 -(void)deviceready:(CDVInvokedUrlCommand *)command;
 -(void)showSubview:(CDVInvokedUrlCommand *)command;
 -(void)hideSubview:(CDVInvokedUrlCommand *)command;
+-(void)loadUrlInSubview:(CDVInvokedUrlCommand *)command;
 
 @end

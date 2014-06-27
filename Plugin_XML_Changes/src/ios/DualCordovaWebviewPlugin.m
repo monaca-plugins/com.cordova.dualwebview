@@ -8,8 +8,19 @@
 
 #import "DualCordovaWebviewPlugin.h"
 
+@interface DualCordovaWebviewPlugin()
+
+@property (readwrite, assign) BOOL deviceready;
+@property (readwrite, assign) BOOL loadUrl;
+
+
+
+@property (readonly, nonatomic, retain) NSMutableArray* eventQueue;
+
+@end
+
 @implementation DualCordovaWebviewPlugin
-@synthesize webview,webviewHeight;
+@synthesize webview,webviewHeight,deviceready,eventQueue,loadUrl;
 
 
 -(void)deviceready:(CDVInvokedUrlCommand*)command
@@ -17,6 +28,13 @@
     self.webview = [[UIWebView alloc]init];
     self.webview .delegate = self;
     self.webview.tag = 100;
+    
+    deviceready = YES;
+    for (NSString* js in eventQueue) {
+        [self.commandDelegate evalJs:js];
+    }
+    
+    [eventQueue removeAllObjects];
 }
 
 //***** add subview ****//
@@ -40,12 +58,12 @@
             [self.webview  loadRequest:request];
             [self.viewController.view addSubview:self.webview];
         }
-        else{
+        else
+        {
             [self.webView setFrame:CGRectMake(0, 20, 320, 548 - webviewHeight)];
             [self.webview setFrame:CGRectMake(0, 548-webviewHeight, 320, webviewHeight)];
             [self.webview  setBackgroundColor:[UIColor clearColor]];
-            NSString* url1 = @"http://www.google.com";
-            NSURL* nsUrl1 = [NSURL URLWithString:url1];
+            NSURL* nsUrl1 = [NSURL URLWithString:url];
             NSURLRequest* request1 = [NSURLRequest requestWithURL:nsUrl1 cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
             [self.webview  loadRequest:request1];
             [self.viewController.view addSubview:self.webview];
@@ -54,10 +72,11 @@
     else{
         [self.webView setFrame:CGRectMake(0, 20, 320, 548)];
         self.webView.delegate = self;
-        NSString* url = @"http://www.yahoo.com";
+        
         NSURL* nsUrl = [NSURL URLWithString:url];
         NSURLRequest* request = [NSURLRequest requestWithURL:nsUrl cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
         [self.webView loadRequest:request];
+        
     }
     
 }
@@ -76,7 +95,6 @@
         [self.webview  setHidden:NO];
         [self.webView setFrame:CGRectMake(0, 20, 320, 488 - webviewHeight)];
         [self.webview setFrame:CGRectMake(0, 548-webviewHeight, 320, webviewHeight)];
-        
     }
 }
 
@@ -88,7 +106,6 @@
         [self.webview  setHidden:YES];
         [self.webView setFrame:CGRectMake(0, 20, 320, 548)];
         [self.viewController.view bringSubviewToFront:self.webView];
-        
     }
     else{
         
@@ -97,19 +114,53 @@
         [self.viewController.view bringSubviewToFront:self.webView];
         
     }
-    
 }
 
+//***** load url in subview ****//
+-(void)loadUrlInSubview:(CDVInvokedUrlCommand *)command{
+    
+    NSMutableDictionary* properties = [command.arguments objectAtIndex:0];
+    
+    NSString *url = [properties objectForKey:@"url"];
+    
+    NSURL* nsUrl = [NSURL URLWithString:url];
+    NSURLRequest* request = [NSURLRequest requestWithURL:nsUrl cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+    [self.webview loadRequest:request];
+    
+    loadUrl = YES;
+    alertDisplayed = NO;
+}
+
+
+//***** event gets fired when page in subview is loaded ****//
+- (void) fireEvent:(NSString*)event  message:(NSString *)message
+{
+    NSString* params = [NSString stringWithFormat:
+                        @"\'%@\'",
+                        message];
+    
+    NSString* js = [NSString stringWithFormat:
+                    @"window.DualwebView.on%@(%@)",
+                    event, params];
+    
+    if (deviceready) {
+        [self.commandDelegate evalJs:js];
+    } else {
+        [self.eventQueue addObject:js];
+    }
+}
 
 #pragma mark UIWebview Delegate
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
+    
     if (webView.tag == 100)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"Page Loaded" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
+        [self fireEvent:@"Navigation" message:webview.request.URL.absoluteString];
+        
     }
+    
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
