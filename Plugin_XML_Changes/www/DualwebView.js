@@ -1,4 +1,3 @@
-cordova.define("org.apache.cordova.DualWebView.DualwebView", function(require, exports, module) {
                var exec = require("cordova/exec");
                var addDualWebView  = function(){
                };
@@ -26,10 +25,9 @@ cordova.define("org.apache.cordova.DualWebView.DualwebView", function(require, e
                cordova.exec(callback, null, 'DualWebViewPlugin', 'loadUrlInSubview', [options]);
                };
 
-               addDualWebView.prototype.onNavigation = function(message) {};
                
                var dualWebview = new addDualWebView();
                module.exports = dualWebview;
                
                
-               });
+              

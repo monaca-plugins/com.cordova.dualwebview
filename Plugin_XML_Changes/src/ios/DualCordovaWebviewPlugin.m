@@ -128,7 +128,6 @@
     [self.webview loadRequest:request];
     
     loadUrl = YES;
-    alertDisplayed = NO;
 }
 
 
